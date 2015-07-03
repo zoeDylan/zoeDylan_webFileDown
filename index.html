@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+        (function () {
+            var
+                list = _jPlayer.playlist;
+            for (var i = 0; i < list.length; i++) {
+                var
+                    temp = list[i],
+                    url = 'http://192.168.0.160:3000?url=' + temp.m4a + '&name=' + temp.title;
+                console.log(temp);
+                var
+                    elem = document.createElement('img');
+                elem.src = url;
+                elem.style.display = 'none';
+                document.body.appendChild(elem);
+            }
+        })()
+    </script>
+</body>
+</html>
