@@ -1,13 +1,12 @@
 ﻿
 var request = require('request'),
-    fs = require('fs');
-
-
+    fs = require('fs'),
+	file = require('./file.js');
 
 function saveFile(op) {
 	op = {
 		url: op.url || op,
-		name: op.name || ''
+		name: op.name
 	}
 	console.log("【开始爬取】" + op.url);
 	request(op.url, {
@@ -21,19 +20,15 @@ function saveFile(op) {
 			uri = response.request.uri,
 			dir = process.cwd() + '/upload/',
 			host = dir + uri.hostname.replace(/[^.\w]/g, '_'),
-			name = host + '/' + ('【' + op.name + '】' + uri.pathname.replace(/[^.\w]/g, '-'));
+			name = host + '/' + ((op.name ? '【' + op.name + '】' : '') + uri.pathname.replace(/[^.\w]/g, '-'));
 		if (!fs.existsSync(host)) {
-			fs.mkdirSync(host);
+			file.createDir(host);
 		}
-		save(name, body);
-		console.log("【爬取完成】" + op.url);
+		file.writeFile(name, body, function () {
+			console.log("【爬取完成】" + op.url);
+		});
 	});
-}
-
-//保存文件
-function save(path, cont) {
-	fs.writeFile(path, cont);
-}
+} 
 
 module.exports = (function () {
 	return {
