@@ -2,7 +2,29 @@
     fs = require('fs'),
 	file = require('./file.js');
 
-function saveFile(op) {
+/*
+ * 存储文件
+ * <op{array||object},callback{function(data)}>
+ */
+function saveFile(op, callback) {
+
+	function _____() {
+
+		q.push(function (cb) {
+
+		});
+		q.start(function () {
+			saveData();
+			console.warn("【已全部更新】");
+			fn({
+				message: "已全部更新!"
+			})
+			end();
+			//发送邮件
+			sendMail();
+
+		});
+	}
 	op = {
 		url: op.url || op,
 		name: op.name

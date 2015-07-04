@@ -5,6 +5,7 @@
     "private": true,
     "dependencies": {
         "request": "x",
-        "express": "x"
+        "express": "x",
+        "queue": "x"
     }
 }
