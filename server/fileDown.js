@@ -1,5 +1,4 @@
-﻿
-var request = require('request'),
+﻿var request = require('request'),
     fs = require('fs'),
 	file = require('./file.js');
 

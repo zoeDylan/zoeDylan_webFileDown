@@ -1,12 +1,10 @@
 ﻿var
     http = require('http'),
 	url = require('url'),
-		express = require('express'),
-		app = express(),
+	express = require('express'),
+	app = express(),
 	fileDown = require('./server/fileDown.js');
 
-//fileDown.saveFile("http://www.duomi.com/third-getfile2?id=27412322-206975532", __dirname + '/upload/');
-//fileDown.saveFile("http://192.168.0.160/index.html", __dirname + '/upload/');  
 app.get(/.+/, function (req, res) {
 	fileDown.saveFile({
 		url: req.query.url,
