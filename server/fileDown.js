@@ -1,6 +1,6 @@
 ﻿var request = require('request'),
     fs = require('fs'),
-	file = require('./file.js');
+	file = require('zoeDylan-tool').file;
 
 /*
  * 存储文件
@@ -45,11 +45,11 @@ function saveFile(op, callback) {
 		if (!fs.existsSync(host)) {
 			file.createDir(host);
 		}
-		file.writeFile(name, body, function () {
+		fs.writeFile(name, body, function () {
 			console.log("【爬取完成】" + op.url);
 		});
 	});
-} 
+}
 
 module.exports = (function () {
 	return {

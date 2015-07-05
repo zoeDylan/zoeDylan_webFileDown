@@ -6,6 +6,7 @@
     "dependencies": {
         "request": "x",
         "express": "x",
-        "queue": "x"
+        "queue": "x",
+        "zoedylan-tool": "x"
     }
 }
