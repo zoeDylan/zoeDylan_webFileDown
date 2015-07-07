@@ -1,9 +1,17 @@
 ﻿var request = require('request'),
     fs = require('fs'),
-	file = require('zoeDylan-tool').file;
+	file = require('zoeDylan-tool').file,
+	config = {
+		num: 0,
+		lsit: [{
+			name: "",
+			url: "",
+			path:""
+		}]
+	};
 
 /*
- * 存储文件
+ * 存储网络文件
  * <op{array||object},callback{function(data)}>
  */
 function saveFile(op, callback) {
@@ -51,6 +59,12 @@ function saveFile(op, callback) {
 	});
 }
 
+/*
+ * 读取配置文件
+ */
+function readConfig() {
+	
+}
 module.exports = (function () {
 	return {
 		saveFile: saveFile
