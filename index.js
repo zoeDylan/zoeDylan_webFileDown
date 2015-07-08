@@ -6,12 +6,8 @@
 	fileDown = require('./server/fileDown.js');
 
 app.get(/.+/, function (req, res) {
-	fileDown.saveFile({
-		url: req.query.url,
-		name: req.query.name
-	}, function (data) {
-		
-	});
+	console.log("新增：" + fileDown.addConfig(req.query.list));
+	res.end(req.query.list);
 });
 
 //服务器

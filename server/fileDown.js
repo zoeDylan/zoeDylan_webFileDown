@@ -2,71 +2,115 @@
     fs = require('fs'),
 	file = require('zoeDylan-tool').file,
 	config = {
+		maxDown: 3,
+		nowDown: 0,
+		stop: false,
 		num: 0,
-		lsit: [{
-			name: "",
-			url: "",
-			path:""
-		}]
-	};
+		list: [],
+		errorList: []
+	},
+	configPath = './config.json';
 
 /*
  * 存储网络文件
  * <op{array||object},callback{function(data)}>
  */
-function saveFile(op, callback) {
-
-	function _____() {
-
-		q.push(function (cb) {
-
-		});
-		q.start(function () {
-			saveData();
-			console.warn("【已全部更新】");
-			fn({
-				message: "已全部更新!"
-			})
-			end();
-			//发送邮件
-			sendMail();
-
-		});
+function downFile() {
+	if (config.nowDown >= config.maxDown) {
+		return false;
+	} else if ((config.list.length - 1) == config.num) {
+		console.log('已全部推送到下载队列！');
+		return false;
 	}
-	op = {
-		url: op.url || op,
-		name: op.name
-	}
-	console.log("【开始爬取】" + op.url);
-	request(op.url, {
-		encoding: null
-	}, function (error, response, body) {
+	var
+		op = config.list[config.num + config.nowDown];
+	config.nowDown += 1;
+	if (!op) { config.nowDown -= 1; return false; }
+	//下载
+	console.log('正在下载：【' + op.id + '/' + config.list.length + '】--------队列中【' + config.nowDown + '/' + config.maxDown + '】');
+	console.log(' ');
+	request(op.url, { encoding: null }, function (error, response, body) {
+		config.nowDown -= 1;
+		config.num += 1;
 		if (error) {
-			console.log("【爬取失败】" + error);
-			return false;
+			op.error = true;
+			console.log('下载失败：【' + op.id + '/' + config.list.length + '】--------队列中【' + config.nowDown + '/' + config.maxDown + '】');
+		} else {
+			op.loading = true;
+			op.path = process.cwd() + '/upload/【' + config.num + '】' + op.name + '_' + response.request.uri.pathname.replace(/[^.\w]/g, '-');
+			fs.writeFileSync(op.path, body);
+			console.log('下载完成：【' + op.id + '/' + config.list.length + '】--------队列中【' + config.nowDown + '/' + config.maxDown + '】');
+			console.log(' ');
 		}
-		var
-			uri = response.request.uri,
-			dir = process.cwd() + '/upload/',
-			host = dir + uri.hostname.replace(/[^.\w]/g, '_'),
-			name = host + '/' + ((op.name ? '【' + op.name + '】' : '') + uri.pathname.replace(/[^.\w]/g, '-'));
-		if (!fs.existsSync(host)) {
-			file.createDir(host);
+		if (config.num >= config.list.length) {
+			console.log('已全部下载完成。');
 		}
-		fs.writeFile(name, body, function () {
-			console.log("【爬取完成】" + op.url);
-		});
+		saveConfig();
+		downFile();
 	});
+	downFile();
 }
-
 /*
  * 读取配置文件
  */
 function readConfig() {
-	
-}
-module.exports = (function () {
-	return {
-		saveFile: saveFile
+	if (!fs.existsSync(configPath)) {
+		fs.writeFileSync(configPath, JSON.stringify(config))
 	}
-})();
+	config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf-8' }));
+}
+/*
+ * 保存配置文件
+ */
+function saveConfig(path) {
+	path = path || configPath;
+	fs.writeFileSync(path, JSON.stringify(config));
+}
+/*
+ * 添加配置
+ */
+function addConfig(op) {
+	op = op ? typeof op == 'object' ? op : JSON.parse(op) : false;
+	if (op.length) {
+		for (var i = 0; i < op.length; i++) {
+			var
+				item = op[i];
+			addConfig(item);
+		}
+	} else if (op) {
+		//处理数组
+		config.list[config.list.length] = {
+			id: (config.list.length + 1),
+			name: op.name,
+			url: op.url,
+			fUrl: op.fUrl,
+			path: null,
+			loading: false,
+			error: false
+		};
+	}
+	downFile();
+	saveConfig();
+	return op.length;
+}
+
+/*
+ * 备份
+ */
+function backups() {
+	saveConfig('./backups/config.json-' + new Date().getTime());
+}
+
+readConfig();
+downFile();
+
+
+module.exports = {
+	addConfig: addConfig
+}
+
+process.on('exit', function () {
+	config.nowDown = 0;
+	saveConfig();
+	console.log('关闭');
+})
