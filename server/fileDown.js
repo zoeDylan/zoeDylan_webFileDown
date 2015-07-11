@@ -37,7 +37,7 @@ function downFile() {
 			console.log('下载失败：【' + op.id + '/' + config.list.length + '】--------队列中【' + config.nowDown + '/' + config.maxDown + '】');
 		} else {
 			op.loading = true;
-			op.path = process.cwd() + '/upload/【' + config.num + '】' + op.name + '_' + response.request.uri.pathname.replace(/[^.\w]/g, '-');
+			op.path = process.cwd() + '/upload/【' + op.id+ '】' + op.name + '_' + response.request.uri.pathname.replace(/[^.\w]/g, '-');
 			fs.writeFileSync(op.path, body);
 			console.log('下载完成：【' + op.id + '/' + config.list.length + '】--------队列中【' + config.nowDown + '/' + config.maxDown + '】');
 			console.log(' ');

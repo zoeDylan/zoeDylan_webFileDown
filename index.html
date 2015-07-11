@@ -18,11 +18,7 @@
                     fUrl: document.location.href
                 };
             }
-            var
-                elem = document.createElement('img');
-            elem.src = 'http://192.168.0.160:3000?list=' + JSON.stringify(newList);
-            elem.style.display = 'none';
-            document.body.appendChild(elem);
+            console.log(JSON.stringify(newList)); 
         })()
     </script>
 </body>
