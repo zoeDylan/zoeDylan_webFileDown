@@ -18,3 +18,5 @@
 >打开根目录的config.json文件,把里面**"num":896**修改成**"num":0**即可下载
 
 >   node openConfig.js;
+
+####声明：config.json文件内容来源于网络,如果存在损害您利益的地方,请邮件:【moizd@vip.qq.com】告知.config.json文件是一个测试文件,请勿随意传播！
