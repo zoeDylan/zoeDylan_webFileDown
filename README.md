@@ -9,3 +9,12 @@
 ###示例
 
     192.168.1.1:3000?list=[{name:"",url:"",fUrl:""},{name:"",url:"",fUrl:""}]
+
+
+##PS  PS  PS
+
+>896首高品质音乐放送,请勿传播传播传播！
+
+>打开根目录的config.json文件,把里面**"num":896**修改成**"num":0**即可下载
+
+>   node openConfig.js;
